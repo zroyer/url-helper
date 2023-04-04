@@ -35,12 +35,6 @@ const App = () => {
     resultFormatterMap[format](sanitizedUrls);
   };
 
-  const handleClickClear = (e) => {
-    e.preventDefault();
-    setUrls('');
-    setFormattedUrls('');
-  };
-
   const handleFormatOptimizelyAudienceFilter = (urls) => {
     handleDisplayResults([
       'and',
