@@ -95,20 +95,12 @@ const App = () => {
               </optgroup>
             </select>
           </div>
-          <div>
-            <button
-              onClick={(e) => handleClickClear(e)}
-              disabled={urls.length < 1}
-            >
-              Clear
-            </button>
-            <button
-              onClick={(e) => handleClickFormat(e)}
-              disabled={urls.length < 1}
-            >
-              Format
-            </button>
-          </div>
+          <button
+            onClick={(e) => handleClickFormat(e)}
+            disabled={urls.length < 1}
+          >
+            Format
+          </button>
         </div>
       </form>
       {formattedResults.length > 0 ? (
