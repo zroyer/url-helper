@@ -1,0 +1,33 @@
+[
+  "and",
+  [
+    "or",
+    [
+      "or",
+      {
+        "name": "page_url",
+        "value": "/article/taxes/federal-income-tax-brackets",
+        "match_type": "substring",
+        "type": "custom_attribute"
+      },
+      {
+        "name": "page_url",
+        "value": "/article/taxes/qualify-child-child-care-tax-credit",
+        "match_type": "substring",
+        "type": "custom_attribute"
+      },
+      {
+        "name": "page_url",
+        "value": "/article/taxes/capital-gains-tax-rates",
+        "match_type": "substring",
+        "type": "custom_attribute"
+      },
+      {
+        "name": "page_url",
+        "value": "/article/taxes/tax-deductions-tax-breaks",
+        "match_type": "substring",
+        "type": "custom_attribute"
+      }
+    ]
+  ]
+]
