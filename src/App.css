@@ -30,13 +30,13 @@ label[for='result'] {
 
 .input-form {
   width: 100%;
-  max-width: 600px;
+  max-width: 767px;
   margin: 0 0 3rem 0;
 }
 
 .result-form {
   width: 100%;
-  max-width: 600px;
+  max-width: 767px;
   display: inline-block;
   position: relative;
 }

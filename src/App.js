@@ -1,13 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import './App.css';
 
-const FORMAT_OPTIMIZELY_AUDIENCE_FILTERING = ['and', ['or', ['or']]];
-
 const App = () => {
   const [urls, setUrls] = useState('');
-  const [format, setFormat] = useState('audience-filtering');
-  const [formattedUrls, setFormattedUrls] = useState('');
+  const [format, setFormat] = useState('audience-filter');
+  const [formattedResults, setFormattedUrls] = useState('');
   const [userClickedCopy, setUserClickedCopy] = useState(false);
+
+  const handleClickCopy = () => {
+    setUserClickedCopy(true);
+    navigator.clipboard.writeText(formattedResults);
+  };
 
   useEffect(() => {
     if (userClickedCopy) {
@@ -24,31 +27,40 @@ const App = () => {
       .split('\n') // Splits each URL into an array index
       .filter((line) => line); // Remove any blank lines
 
-    const resultHandlerMap = {
-      'audience-filtering': handleFormatOptimizelyAudienceFiltering,
+    const resultFormatterMap = {
+      'audience-filter': handleFormatOptimizelyAudienceFilter,
       'javascript-array': handleDisplayResults,
     };
 
-    resultHandlerMap[format](sanitizedUrls);
+    resultFormatterMap[format](sanitizedUrls);
+  };
+
+  const handleClickClear = (e) => {
+    e.preventDefault();
+    setUrls('');
+    setFormattedUrls('');
+  };
+
+  const handleFormatOptimizelyAudienceFilter = (urls) => {
+    handleDisplayResults([
+      'and',
+      [
+        'or',
+        [
+          'or',
+          ...urls.map((url) => ({
+            name: 'page_url',
+            value: url,
+            match_type: 'substring',
+            type: 'custom_attribute',
+          })),
+        ],
+      ],
+    ]);
   };
 
   const handleDisplayResults = (result) => {
     setFormattedUrls(JSON.stringify(result, null, 2));
-  };
-
-  const handleClickCopy = () => {
-    setUserClickedCopy(true);
-    navigator.clipboard.writeText(formattedUrls);
-  };
-
-  const handleFormatOptimizelyAudienceFiltering = (urls) => {
-    FORMAT_OPTIMIZELY_AUDIENCE_FILTERING[1][1][1] = urls.map((url) => ({
-      name: 'page_url',
-      value: url,
-      match_type: 'substring',
-      type: 'custom_attribute',
-    }));
-    handleDisplayResults(FORMAT_OPTIMIZELY_AUDIENCE_FILTERING);
   };
 
   return (
@@ -56,7 +68,7 @@ const App = () => {
       <header className="App-header">
         <h2>URL Helper</h2>
       </header>
-      <form className="input-form" onSubmit={handleClickFormat}>
+      <form className="input-form">
         <label htmlFor="input">
           <b>Input:</b>
         </label>
@@ -76,26 +88,38 @@ const App = () => {
               onChange={(e) => setFormat(e.target.value)}
             >
               <optgroup label="Optimizely">
-                <option value="audience-filtering">Audience Filtering</option>
+                <option value="audience-filter">Audience Filter</option>
               </optgroup>
               <optgroup label="JavaScript">
-                {' '}
                 <option value="javascript-array">Array</option>
               </optgroup>
             </select>
           </div>
-          <button onClick={(e) => handleClickFormat(e)}>Format</button>
+          <div>
+            <button
+              onClick={(e) => handleClickClear(e)}
+              disabled={urls.length < 1}
+            >
+              Clear
+            </button>
+            <button
+              onClick={(e) => handleClickFormat(e)}
+              disabled={urls.length < 1}
+            >
+              Format
+            </button>
+          </div>
         </div>
       </form>
-      {formattedUrls.length > 0 ? (
+      {formattedResults.length > 0 ? (
         <div className="result-form">
           <label htmlFor="result">
             <b>Result:</b>
           </label>
           <textarea
             id="result"
-            rows={formattedUrls.split(/\r|\r\n|\n/).length}
-            value={formattedUrls}
+            rows={formattedResults.split(/\r|\r\n|\n/).length}
+            value={formattedResults}
             readOnly
           />
           <button onClick={handleClickCopy} className="btn-copy">
